@@ -52,6 +52,10 @@ namespace DiskMonitor
             Console.WriteLine($"IsReadOnly          : {info.IsReadOnly}");
             Console.WriteLine($"MaxNameLenght       : {info.MaxNameLenght}");
             Console.WriteLine();
+
+            var availableSpaceGb = (info.AvailableBlocks * info.BlockSize) / 1024 / 1024 / 1024;
+            Console.WriteLine($"availableSpaceGb: {availableSpaceGb}");
+            Console.WriteLine();
         }
     }
 }

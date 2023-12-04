@@ -11,16 +11,21 @@ namespace DiskMonitor
             try
             {
                 Console.WriteLine("Connecting!");
-                using var client = new SftpClient(
+
+                var pk = new PrivateKeyFile("path_to_key_file");
+                var keyFiles = new[] { pk };
+                var methods = new List<AuthenticationMethod>
+                {
+                    new PrivateKeyAuthenticationMethod(Environment.GetEnvironmentVariable("SSH_USER"), keyFiles)
+                };
+                var con = new ConnectionInfo(
                     Environment.GetEnvironmentVariable("SSH_HOST"),
                     int.Parse(Environment.GetEnvironmentVariable("SSH_PORT")),
                     Environment.GetEnvironmentVariable("SSH_USER"),
-                    "secret");
+                    methods.ToArray());
+                using var client = new SftpClient(con);
                 client.Connect();
                 PrintInfo(client, "/home");
-                PrintInfo(client, "/init");
-                PrintInfo(client, "/mnt/c");
-                PrintInfo(client, "/mnt/d");
             }
             catch (Exception ex)
             {
